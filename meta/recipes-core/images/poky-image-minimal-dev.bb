@@ -3,7 +3,7 @@
 #
 IMAGE_INSTALL = "task-poky-boot ${ROOTFS_PKGMANAGE}"
 
-IMAGE_FEATURES += "dev-pkgs"
+IMAGE_FEATURES += "dev"
 
 IMAGE_LINGUAS = " "
 
