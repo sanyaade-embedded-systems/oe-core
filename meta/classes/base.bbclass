@@ -9,7 +9,7 @@ inherit utility-tasks
 inherit metadata_scm
 inherit buildstats
 
-OE_IMPORTS += "oe.path oe.utils sys os time"
+OE_IMPORTS += "sys os time oe.path oe.utils oe.data"
 
 def oe_import(d):
     import os, sys
