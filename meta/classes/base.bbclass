@@ -11,26 +11,29 @@ inherit buildstats
 
 OE_IMPORTS += "oe.path oe.utils sys os time"
 
-python oe_import () {
+def oe_import(d):
+    import os, sys
+
+    bbpath = d.getVar("BBPATH", True).split(":")
+    sys.path[0:0] = [os.path.join(dir, "lib") for dir in bbpath]
+
+    def inject(name, value):
+        """Make a python object accessible from the metadata"""
+        if hasattr(bb.utils, "_context"):
+            bb.utils._context[name] = value
+        else:
+            __builtins__[name] = value
+
+    for toimport in d.getVar("OE_IMPORTS", True).split():
+        imported = __import__(toimport)
+        inject(toimport.split(".", 1)[0], imported)
+
+python oe_import_eh () {
     if isinstance(e, bb.event.ConfigParsed):
-        import os, sys
-
-        bbpath = e.data.getVar("BBPATH", True).split(":")
-        sys.path[0:0] = [os.path.join(dir, "lib") for dir in bbpath]
-
-        def inject(name, value):
-            """Make a python object accessible from the metadata"""
-            if hasattr(bb.utils, "_context"):
-                bb.utils._context[name] = value
-            else:
-                __builtins__[name] = value
-
-        for toimport in e.data.getVar("OE_IMPORTS", True).split():
-            imported = __import__(toimport)
-            inject(toimport.split(".", 1)[0], imported)
+	oe_import(e.data)
 }
 
-addhandler oe_import
+addhandler oe_import_eh
 
 die() {
 	oefatal "$*"
