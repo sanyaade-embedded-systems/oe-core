@@ -6,7 +6,7 @@ def raise_sanity_error(msg):
     bb.fatal(""" Poky's config sanity checker detected a potential misconfiguration.
     Either fix the cause of this error or at your own risk disable the checker (see sanity.conf).
     Following is the list of potential problems / advisories:
-    
+
     %s""" % msg)
 
 def check_conf_exists(fn, data):
@@ -36,7 +36,7 @@ def check_sanity_tmpdir_change(tmpdir):
     # Check that TMPDIR isn't on a filesystem with limited filename length (eg. eCryptFS)
     testmsg = check_create_long_filename(tmpdir, "TMPDIR")
     return testmsg
-        
+
 def check_sanity_version_change():
     # Sanity checks to be done when SANITY_VERSION changes
     return ""
@@ -87,7 +87,7 @@ def check_sanity(e):
     # Check the bitbake version meets minimum requirements
     minversion = data.getVar('BB_MIN_VERSION', e.data , True)
     if not minversion:
-        # Hack: BB_MIN_VERSION hasn't been parsed yet so return 
+        # Hack: BB_MIN_VERSION hasn't been parsed yet so return
         # and wait for the next call
         print "Foo %s" % minversion
         return
@@ -109,7 +109,7 @@ def check_sanity(e):
     # Check TARGET_ARCH is set
     if data.getVar('TARGET_ARCH', e.data, True) == 'INVALID':
         messages = messages + 'Please set TARGET_ARCH directly, or choose a MACHINE or DISTRO that does so.\n'
-    
+
     # Check TARGET_OS is set
     if data.getVar('TARGET_OS', e.data, True) == 'INVALID':
         messages = messages + 'Please set TARGET_OS directly, or choose a MACHINE or DISTRO that does so.\n'
@@ -138,20 +138,20 @@ def check_sanity(e):
     # Check user doesn't have ASSUME_PROVIDED = instead of += in local.conf
     if "diffstat-native" not in assume_provided:
         messages = messages + 'Please use ASSUME_PROVIDED +=, not ASSUME_PROVIDED = in your local.conf\n'
-    
+
     # Check that the MACHINE is valid, if it is set
     if data.getVar('MACHINE', e.data, True):
         if not check_conf_exists("conf/machine/${MACHINE}.conf", e.data):
             messages = messages + 'Please set a valid MACHINE in your local.conf\n'
 
-    # Check that DL_DIR is set, exists and is writable. In theory, we should never even hit the check if DL_DIR isn't 
+    # Check that DL_DIR is set, exists and is writable. In theory, we should never even hit the check if DL_DIR isn't
     # set, since so much relies on it being set.
     dldir = data.getVar('DL_DIR', e.data, True)
     if not dldir:
         messages = messages + "DL_DIR is not set. Your environment is misconfigured, check that DL_DIR is set, and if the directory exists, that it is writable. \n"
     if os.path.exists(dldir) and not os.access(dldir, os.W_OK):
         messages = messages + "DL_DIR: %s exists but you do not appear to have write access to it. \n" % dldir
-    
+
     # Check that the DISTRO is valid
     # need to take into account DISTRO renaming DISTRO
     if not ( check_conf_exists("conf/distro/${DISTRO}.conf", e.data) or check_conf_exists("conf/distro/include/${DISTRO}.inc", e.data) ):
@@ -259,13 +259,13 @@ def check_sanity(e):
                 last_tmpdir = line.split()[1]
             if line.startswith('SSTATE_DIR'):
                 last_sstate_dir = line.split()[1]
-    
+
     sanity_version = int(data.getVar('SANITY_VERSION', e.data, True) or 1)
-    if last_sanity_version < sanity_version: 
+    if last_sanity_version < sanity_version:
         messages = messages + check_sanity_version_change()
         messages = messages + check_sanity_tmpdir_change(tmpdir)
         messages = messages + check_sanity_sstate_dir_change(sstate_dir)
-    else: 
+    else:
         if last_tmpdir != tmpdir:
             messages = messages + check_sanity_tmpdir_change(tmpdir)
         if last_sstate_dir != sstate_dir:
@@ -273,9 +273,9 @@ def check_sanity(e):
 
     if os.path.exists("conf"):
         f = file(sanityverfile, 'w')
-        f.write("SANITY_VERSION %s\n" % sanity_version) 
-        f.write("TMPDIR %s\n" % tmpdir) 
-        f.write("SSTATE_DIR %s\n" % sstate_dir) 
+        f.write("SANITY_VERSION %s\n" % sanity_version)
+        f.write("TMPDIR %s\n" % tmpdir)
+        f.write("SSTATE_DIR %s\n" % sstate_dir)
 
     #
     # Check that TMPDIR hasn't changed location since the last time we were run

@@ -65,7 +65,7 @@ def package_qa_get_machine_dict():
                         "mips":       (   8,     0,    0,          False,         32),
                         "mipsel":     (   8,     0,    0,          True,          32),
                         "avr32":      (6317,     0,    0,          False,         32),
-			"sh4":        (42,	 0,    0,          True,          32),
+                        "sh4":        (42,       0,    0,          True,          32),
 
                       },
             "uclinux-uclibc" : {
@@ -309,7 +309,7 @@ def package_qa_hash_style(path, name, d, elf):
         if "GNU_HASH" in line:
             sane = True
         if "[mips32]" in line or "[mips64]" in line:
-	    sane = True
+            sane = True
 
     if elf and not sane:
         error_msg = "No GNU_HASH in the elf binary: '%s'" % path

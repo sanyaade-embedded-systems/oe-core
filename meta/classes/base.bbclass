@@ -30,7 +30,7 @@ def oe_import(d):
 
 python oe_import_eh () {
     if isinstance(e, bb.event.ConfigParsed):
-	oe_import(e.data)
+        oe_import(e.data)
 }
 
 addhandler oe_import_eh
@@ -84,7 +84,7 @@ def base_dep_prepend(d):
 	# the application.
 	if not bb.data.getVar('INHIBIT_DEFAULT_DEPS', d):
 		if (bb.data.getVar('HOST_SYS', d, 1) !=
-	     	    bb.data.getVar('BUILD_SYS', d, 1)):
+		    bb.data.getVar('BUILD_SYS', d, 1)):
 			deps += " virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}compilerlibs virtual/libc "
 	return deps
 
@@ -100,38 +100,37 @@ THISDIR = "${@os.path.dirname(bb.data.getVar('FILE', d, True))}"
 addtask fetch
 do_fetch[dirs] = "${DL_DIR}"
 python base_do_fetch() {
+    src_uri = (bb.data.getVar('SRC_URI', d, True) or "").split()
+    if len(src_uri) == 0:
+            return
 
-	src_uri = (bb.data.getVar('SRC_URI', d, True) or "").split()
-	if len(src_uri) == 0:
-		return
+    localdata = bb.data.createCopy(d)
+    bb.data.update_data(localdata)
 
-	localdata = bb.data.createCopy(d)
-	bb.data.update_data(localdata)
-
-        try:
-            fetcher = bb.fetch2.Fetch(src_uri, localdata)
-            fetcher.download()
-        except bb.fetch2.BBFetchException, e:
-            raise bb.build.FuncFailed(e)
+    try:
+        fetcher = bb.fetch2.Fetch(src_uri, localdata)
+        fetcher.download()
+    except bb.fetch2.BBFetchException, e:
+        raise bb.build.FuncFailed(e)
 }
 
 addtask unpack after do_fetch
 do_unpack[dirs] = "${WORKDIR}"
 python base_do_unpack() {
-	src_uri = (bb.data.getVar('SRC_URI', d, True) or "").split()
-	if len(src_uri) == 0:
-		return
+    src_uri = (bb.data.getVar('SRC_URI', d, True) or "").split()
+    if len(src_uri) == 0:
+        return
 
-	localdata = bb.data.createCopy(d)
-	bb.data.update_data(localdata)
+    localdata = bb.data.createCopy(d)
+    bb.data.update_data(localdata)
 
-	rootdir = bb.data.getVar('WORKDIR', localdata, True)
+    rootdir = bb.data.getVar('WORKDIR', localdata, True)
 
-        try:
-            fetcher = bb.fetch2.Fetch(src_uri, localdata)
-            fetcher.unpack(rootdir)
-        except bb.fetch2.BBFetchException, e:
-            raise bb.build.FuncFailed(e)
+    try:
+        fetcher = bb.fetch2.Fetch(src_uri, localdata)
+        fetcher.unpack(rootdir)
+    except bb.fetch2.BBFetchException, e:
+        raise bb.build.FuncFailed(e)
 }
 
 GIT_CONFIG = "${STAGING_DIR_NATIVE}/usr/etc/gitconfig"
@@ -202,8 +201,8 @@ python base_eventhandler() {
 		if pesteruser:
 			bb.fatal('The following variable(s) were not set: %s\nPlease set them directly, or choose a MACHINE or DISTRO that sets them.' % ', '.join(pesteruser))
 
-        if name == "ConfigParsed":
-                generate_git_config(e)
+	if name == "ConfigParsed":
+		generate_git_config(e)
 
 	if not data in e.__dict__:
 		return
@@ -442,8 +441,8 @@ python do_cleanall() {
         if len(src_uri) == 0:
             return
 
-	localdata = bb.data.createCopy(d)
-	bb.data.update_data(localdata)
+        localdata = bb.data.createCopy(d)
+        bb.data.update_data(localdata)
 
         try:
             fetcher = bb.fetch2.Fetch(src_uri, localdata)

@@ -2,12 +2,12 @@ BUILDSTATS_BASE = ${TMPDIR}/buildstats/
 BNFILE = ${BUILDSTATS_BASE}/.buildname
 
 ################################################################################
-# Build statistics gathering. 
+# Build statistics gathering.
 #
 # The CPU and Time gathering/tracking functions and bbevent inspiration
-# were written by Christopher Larson and can be seen here: 
+# were written by Christopher Larson and can be seen here:
 # http://kergoth.pastey.net/142813
-# 
+#
 ################################################################################
 
 def get_process_cputime(pid):
@@ -41,7 +41,7 @@ def get_timedata(var, data):
     else:
         cpuperc = None
     return timediff, cpuperc
-    
+
 ##############################################
 # We need to set the buildname to a file since
 # BUILDNAME changes throughout a build
@@ -97,7 +97,7 @@ python run_buildstats () {
         file.write("\n")
         file.write("Build Started: %0.2f \n" % time.time())
         file.close()
-                
+
     elif isinstance(e, bb.event.BuildCompleted):
         bn=get_bn(e)
         timedata = get_timedata("__timedata_build", e.data)
@@ -117,7 +117,7 @@ python run_buildstats () {
     if isinstance(e, bb.build.TaskStarted):
         bn=get_bn(e)
         set_timedata("__timedata_task", e.data)
-        
+
         bsdir = os.path.join(bb.data.getVar('BUILDSTATS_BASE', e.data, True), bn)
         taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
         try:
@@ -144,20 +144,20 @@ python run_buildstats () {
         file.write("Ended: %0.2f \n" % time.time())
         if cpu:
             file.write("CPU usage: %0.1f%% \n" % cpu)
-    	
-    	file.write("Status: PASSED")
+
+	file.write("Status: PASSED")
         file.close()
 
         ##############################################
-        # Alot of metric gathering occurs here. 
+        # Alot of metric gathering occurs here.
         # Reminder: I stripped out some in process stuff here
         ##############################################
 
         if e.task == "do_rootfs":
             bs=os.path.join(bsdir, "build_stats")
-            file = open(bs,"a") 
+            file = open(bs,"a")
             rootfs = bb.data.getVar('IMAGE_ROOTFS', e.data, True)
-            rootfs_size = subprocess.Popen(["du", "-sh", rootfs], stdout=subprocess.PIPE).stdout.read() 
+            rootfs_size = subprocess.Popen(["du", "-sh", rootfs], stdout=subprocess.PIPE).stdout.read()
             file.write("Uncompressed Rootfs size: %s" % rootfs_size)
             file.close()
 
@@ -170,9 +170,9 @@ python run_buildstats () {
         bsdir = os.path.join(bb.data.getVar('BUILDSTATS_BASE', e.data, True), bn)
         taskdir = os.path.join(bsdir, bb.data.expand("${PF}", e.data))
         ##############################################
-        # If the task fails dump the regular data. 
-        # fgrep -R "FAILED" <bsdir> 
-        # will grep all the events that failed. 
+        # If the task fails dump the regular data.
+        # fgrep -R "FAILED" <bsdir>
+        # will grep all the events that failed.
         ##############################################
         file = open(os.path.join(taskdir, e.task), "a")
         file.write(bb.data.expand("${PF}: %s: Elapsed time: %0.2f seconds \n" %

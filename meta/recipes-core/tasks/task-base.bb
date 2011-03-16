@@ -32,7 +32,7 @@ PACKAGES = ' \
             ${@base_contains("MACHINE_FEATURES", "uboot", "task-base-uboot", "",d)} \
             ${@base_contains("MACHINE_FEATURES", "redboot", "task-base-redboot", "",d)} \
             ${@base_contains("MACHINE_FEATURES", "apex", "task-base-apex", "",d)} \
-	    \
+            \
             ${@base_contains("DISTRO_FEATURES", "bluetooth", "task-base-bluetooth", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "wifi", "task-base-wifi", "", d)} \
             ${@base_contains("DISTRO_FEATURES", "cramfs", "task-base-cramfs", "", d)} \
@@ -129,10 +129,10 @@ python __anonymous () {
     machine_features= set(bb.data.getVar("MACHINE_FEATURES", d, 1).split())
 
     if "bluetooth" in distro_features and not "bluetooth" in machine_features and ("pcmcia" in machine_features or "pci" in machine_features or "usbhost" in machine_features):
-	bb.data.setVar("ADD_BT", "task-base-bluetooth", d)
+        bb.data.setVar("ADD_BT", "task-base-bluetooth", d)
 
     if "wifi" in distro_features and not "wifi" in machine_features and ("pcmcia" in machine_features or "pci" in machine_features or "usbhost" in machine_features):
-	bb.data.setVar("ADD_WIFI", "task-base-wifi", d)
+        bb.data.setVar("ADD_WIFI", "task-base-wifi", d)
 }
 
 #
@@ -356,10 +356,10 @@ RDEPENDS_task-base-zeroconf = "\
     avahi-daemon"
 
 RDEPENDS_task-base-raid = "\
-	"
+        "
 
 RDEPENDS_task-base-screen = "\
-	"
+        "
 
 #
 # GPE/OPIE/OpenMoko provide own touchscreen calibration utils
