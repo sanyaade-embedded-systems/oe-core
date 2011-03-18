@@ -272,7 +272,7 @@ python do_package_deb () {
         except ValueError:
             pass
         if not g and bb.data.getVar('ALLOW_EMPTY', localdata) != "1":
-            bb.note("Not creating empty archive for %s-%s-%s" % (pkg, bb.data.getVar('PV', localdata, True), bb.data.getVar('PR', localdata, True)))
+            bb.note("Not creating empty archive for %s-%s-%s" % (pkg, bb.data.getVar('PV', localdata, True), bb.data.getVar('PKGR', localdata, True)))
             bb.utils.unlockfile(lf)
             continue
 
@@ -290,9 +290,9 @@ python do_package_deb () {
         fields = []
         pe = bb.data.getVar('PE', d, True)
         if pe and int(pe) > 0:
-            fields.append(["Version: %s:%s-%s\n", ['PE', 'PV', 'PR']])
+            fields.append(["Version: %s:%s-%s\n", ['PE', 'PV', 'PKGR']])
         else:
-            fields.append(["Version: %s-%s\n", ['PV', 'PR']])
+            fields.append(["Version: %s-%s\n", ['PV', 'PKGR']])
         fields.append(["Description: %s\n", ['DESCRIPTION']])
         fields.append(["Section: %s\n", ['SECTION']])
         fields.append(["Priority: %s\n", ['PRIORITY']])

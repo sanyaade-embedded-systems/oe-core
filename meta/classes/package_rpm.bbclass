@@ -383,7 +383,7 @@ python write_specfile () {
 	srcname    = bb.data.getVar('PN', d, True)
 	srcsummary = (bb.data.getVar('SUMMARY', d, True) or bb.data.getVar('DESCRIPTION', d, True) or ".")
 	srcversion = bb.data.getVar('PV', d, True).replace('-', '+')
-	srcrelease = bb.data.getVar('PR', d, True)
+	srcrelease = bb.data.getVar('PKGR', d, True)
 	srcepoch   = (bb.data.getVar('PE', d, True) or "")
 	srclicense = bb.data.getVar('LICENSE', d, True)
 	srcsection = bb.data.getVar('SECTION', d, True)
@@ -438,7 +438,7 @@ python write_specfile () {
 
 		splitsummary = (bb.data.getVar('SUMMARY', localdata, True) or bb.data.getVar('DESCRIPTION', localdata, True) or ".")
 		splitversion = (bb.data.getVar('PV', localdata, True) or "").replace('-', '+')
-		splitrelease = (bb.data.getVar('PR', localdata, True) or "")
+		splitrelease = (bb.data.getVar('PKGR', localdata, True) or "")
 		splitepoch   = (bb.data.getVar('PE', localdata, True) or "")
 		splitlicense = (bb.data.getVar('LICENSE', localdata, True) or "")
 		splitsection = (bb.data.getVar('SECTION', localdata, True) or "")

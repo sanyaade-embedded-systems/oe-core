@@ -39,6 +39,8 @@ inherit packagedata
 PKGD    = "${WORKDIR}/package"
 PKGDEST = "${WORKDIR}/packages-split"
 
+PKGR ?= "${PR}"
+
 # rpm is used for the per-file dependency identification
 PACKAGE_DEPENDS += "rpm-native"
 
@@ -770,7 +772,7 @@ python emit_pkgdata() {
 		sf = open(subdata_file, 'w')
 		write_if_exists(sf, pkg, 'PN')
 		write_if_exists(sf, pkg, 'PV')
-		write_if_exists(sf, pkg, 'PR')
+		write_if_exists(sf, pkg, 'PKGR')
 		write_if_exists(sf, pkg, 'DESCRIPTION')
 		write_if_exists(sf, pkg, 'SUMMARY')
 		write_if_exists(sf, pkg, 'RDEPENDS')
