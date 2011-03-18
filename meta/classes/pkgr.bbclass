@@ -7,7 +7,7 @@ BB_HASHBASE_WHITELIST += "PKGR reset_pr get_pkgr"
 
 python reset_pr() {
     if (isinstance(e, bb.event.RecipeParsed) and
-        d.getVar('BB_SIGNATURE_HANDLER', True) == 'basichash'):
+        e.data.getVar('BB_SIGNATURE_HANDLER', True) == 'basichash'):
         e.data.setVar('PR', '0')
         e.data.setVar('PKGR', '${@get_pkgr(d)}')
 }
