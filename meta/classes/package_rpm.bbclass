@@ -837,6 +837,7 @@ python write_specfile () {
 
 	specfile.close()
 }
+write_specfile[vardeps] += "${@gen_packagevar(d)}"
 
 python do_package_rpm () {
 	import os

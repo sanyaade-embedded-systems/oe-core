@@ -144,6 +144,7 @@ def sstate_install(ss, d):
 
     for lock in locks:
         bb.utils.unlockfile(lock)
+sstate_install[vardeps] += "${SSTATEPOSTINSTFUNCS}"
 
 def sstate_installpkg(ss, d):
     import oe.path
@@ -215,6 +216,7 @@ def sstate_clean_cachefiles(d):
     for task in (d.getVar('SSTATETASKS', True) or "").split():
         ss = sstate_state_fromvars(d, task[3:])
         sstate_clean_cachefile(ss, d)
+sstate_clean_cachefiles[vardeps] += "${SSTATETASKS}"
 
 def sstate_clean_manifest(manifest, d):
     import oe.path

@@ -425,6 +425,7 @@ python do_package_ipk () {
 		bb.utils.unlockfile(lf)
 
 }
+do_package_ipk[vardeps] += "${@gen_packagevar(d)}"
 
 SSTATETASKS += "do_package_write_ipk"
 do_package_write_ipk[sstate-name] = "deploy-ipk"

@@ -393,6 +393,7 @@ python do_package_deb () {
         bb.utils.prunedir(controldir)
         bb.utils.unlockfile(lf)
 }
+do_package_deb[vardeps] += "${@gen_packagevar(d)}"
 
 SSTATETASKS += "do_package_write_deb"
 do_package_write_deb[sstate-name] = "deploy-deb"

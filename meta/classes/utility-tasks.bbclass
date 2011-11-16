@@ -27,6 +27,7 @@ python do_clean() {
 	for f in (d.getVar('CLEANFUNCS', 1) or '').split():
 		bb.build.exec_func(f, d)
 }
+do_clean[vardeps] += "${CLEANFUNCS}"
 
 addtask checkuri
 do_checkuri[nostamp] = "1"

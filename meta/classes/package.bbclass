@@ -1102,6 +1102,7 @@ python emit_pkgdata() {
 
 	bb.utils.unlockfile(lf)
 }
+emit_pkgdata[vardeps] += "${@gen_package_filedep_var(d)}"
 emit_pkgdata[dirs] = "${PKGDESTWORK}/runtime"
 
 ldconfig_postinst_fragment() {
@@ -1182,6 +1183,7 @@ python package_do_filedeps() {
 		bb.data.setVar("FILERDEPENDSFLIST_" + pkg, " ".join(requires_files), d)
 		bb.data.setVar("FILERPROVIDESFLIST_" + pkg, " ".join(provides_files), d)
 }
+package_do_filedeps[vardeps] += "${@gen_package_filedep_var(d)}"
 
 SHLIBSDIR = "${STAGING_DIR_HOST}/shlibs"
 SHLIBSWORKDIR = "${WORKDIR}/shlibs"
@@ -1646,7 +1648,7 @@ python package_depchains() {
 
 # Since bitbake can't determine which variables are accessed during package 
 # iteration, we need to list them here:
-PACKAGEVARS = "FILES RDEPENDS RRECOMMENDS SUMMARY DESCRIPTION RSUGGESTS RPROVIDES RCONFLICTS PKG ALLOW_EMPTY pkg_postinst pkg_postrm INITSCRIPT_NAME INITSCRIPT_PARAMS DEBIAN_NOAUTONAME"
+PACKAGEVARS = "FILES RDEPENDS RRECOMMENDS SUMMARY DESCRIPTION RSUGGESTS RPROVIDES RCONFLICTS PKG ALLOW_EMPTY pkg_postinst pkg_preinst pkg_postrm pkg_prerm INITSCRIPT_NAME INITSCRIPT_PARAMS DEBIAN_NOAUTONAME PKGV PKGR"
 
 def gen_packagevar(d):
     ret = []
@@ -1656,6 +1658,19 @@ def gen_packagevar(d):
         for v in vars:
             ret.append(v + "_" + p)
     return " ".join(ret)
+
+def gen_package_filedep_var(d):
+    ret = []
+    pkgs = (d.getVar("PACKAGES", True) or "").split()
+    for pkg in pkgs:
+        ret.append('FILERPROVIDESFLIST_' + pkg)
+        for rpfile in (d.getVar('FILERPROVIDESFLIST_' + pkg, True) or "").split():
+            ret.append('FILERPROVIDES_%s_%s' % (rpfile, pkg))
+
+        ret.append('FILERDEPENDSFLIST_' + pkg)
+        for rpfile in (d.getVar('FILERDEPENDSFLIST_' + pkg, True) or "").split():
+            ret.append('FILERDEPENDS_%s_%s' % (rpfile, pkg))
+    return ret
 
 PACKAGE_PREPROCESS_FUNCS ?= ""
 PACKAGEFUNCS ?= "package_get_auto_pr \	
