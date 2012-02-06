@@ -60,6 +60,7 @@ do_install() {
 	rm -r ${D}${datadir}/zoneinfo
 	rm -r ${D}${libdir}/bin
 
+	sed -i -e 's/__packed/__attribute__ ((packed))/' ${D}${includedir}/mtd/ubi-user.h
 	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libc.so
 	sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libpthread.so
 }
